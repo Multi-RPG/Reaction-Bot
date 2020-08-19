@@ -1,5 +1,5 @@
 
-# Multi_RPG-2.0
+# Reaction Bot 1.0
 ## About
 Just a gag bot to react on your friends messages, written in python3.8, using discord.py v1.4.1.
 
