@@ -11,17 +11,17 @@ Just a gag bot to react on your friends messages, written in python3.8, using di
 2. Optional: (Recommended) Create virtual environment, run `pip install -r requirements.txt`;
 3. In `tokens` folder, replace value in `tokenbot.ini` with your discord bot token
  
-Optional edits in `Main.py` file:
+Optional edits in `React.py` file:
  - discord emoji names seen as <:x:xxxxxxxxxxxxxxx>
 
 ## Usage:
 ### Linux/macOS
 ```console
-foo@bar:~$ python3 ./Main.py 
+foo@bar:~$ python3 ./React.py
 ```
 ### Windows
 ```console
-C:\Users\jsmith> python Main.py
+C:\Users\jsmith> python React.py
 ```
 
 Note: In this repository, paths are currently setup to run in a windows environment. Adjustment will need to be made for running on Unix.
