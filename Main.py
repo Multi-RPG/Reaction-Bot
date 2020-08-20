@@ -5,7 +5,7 @@ import random
 from discord.ext import commands
 from pathlib import Path
 
-# Bot's prefix is defaulted to '='.
+# Bot's prefix is defaulted to '.'
 bot_prefix = "."
 
 client = commands.Bot(command_prefix=[bot_prefix])
@@ -70,7 +70,6 @@ async def on_message(message):
         else:
             if 5 >= random.randint(1, 100) >= 1:
                 #await message.add_reaction(emoji="<:blabla:745411421243703438>")
-                #await message.add_reaction(emoji="<:worryrope:745417899103092886>")
                 await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
                 #await message.add_reaction(emoji="<:antSquintStare2:740945924402053131>")
                 #await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
