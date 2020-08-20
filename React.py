@@ -29,6 +29,7 @@ async def on_message(message):
                                                                "Shrug", "Unsure", "Love",
                                                                "Handshake", "Wave", "Bait"])
 
+    # Emojis formatted into discord syntax
     emoji = Emoji_Reaction("<:blabla:745411421243703438>", "<:worrysquintstare:745481891624255559>",
                            "<:anywaysDude:693637780802109500>", "<:worryshrug2:745484088596627518>",
                            "<:pepeUnsureAbtThatOneChief:680578638499938305>",
