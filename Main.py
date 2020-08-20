@@ -60,6 +60,9 @@ async def on_message(message):
         # if they said love or miss
         elif any([keyword in message_content for keyword in ('LOVE', 'MISS')]):
             await message.add_reaction(emoji="<:worrylove:745680240646553682>")
+        # if they said cya or later or bye
+        elif any([keyword in message_content for keyword in ('CYA', 'LATER', 'BYE')]):
+            await message.add_reaction(emoji="<a:pepeWave:618911376613834752>")
         # if they said sorry
         elif 'SORRY' in message_content:
             await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
