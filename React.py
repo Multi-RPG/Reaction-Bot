@@ -2,6 +2,7 @@ import discord
 import configparser
 import sys
 import random
+import collections
 from discord.ext import commands
 from pathlib import Path
 
@@ -23,12 +24,16 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # if message.author.id == 141393326871019521:
-    #     if 25 >= random.randint(1, 100) >= 1:
-    #         await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
-    #         await message.add_reaction(emoji="<:blabla:745411421243703438>")
-    #         await message.add_reaction(emoji="<:antSquintStare2:740945924402053131>")
-    #         await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
+    # Emojis used for reaction
+    Emoji_Reaction = collections.namedtuple("Emoji_Reaction", ["Blabla", "Squint", "Anyways",
+                                                               "Shrug", "Unsure", "Love",
+                                                               "Handshake", "Wave", "Bait"])
+
+    emoji = Emoji_Reaction("<:blabla:745411421243703438>", "<:worrysquintstare:745481891624255559>",
+                           "<:anywaysDude:693637780802109500>", "<:worryshrug2:745484088596627518>",
+                           "<:pepeUnsureAbtThatOneChief:680578638499938305>",
+                           "<:worrylove:745680240646553682>", "<:pepehandshake:734537325752614933>",
+                           "<a:pepeWave:618911376613834752>", "<a:jebaitRod:667530473605562387>")
 
     # 70% chance to scan a message to react to it
     if 70 >= random.randint(1, 100) >= 1:
@@ -37,42 +42,39 @@ async def on_message(message):
 
         # if they said blabla, shut, or stop
         if any([keyword in message_content for keyword in ('BLA BLA','BLABLA', 'SHUT', 'STOP')]):
-                await message.add_reaction(emoji="<:blabla:745411421243703438>")
-                await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
+                await message.add_reaction(emoji=emoji.Blabla)
+                await message.add_reaction(emoji=emoji.Squint)
         # if they said anyways, whatever, or seriously
         elif any([keyword in message_content for keyword in ('ANYWAY', 'WHATEVER', 'SERIOUSLY')]):
             # if they sent the anyways dude emoji, don't double dip
-            if message.content == '<:anywaysDude:693637780802109500>':
+            if message.content == emoji.Anyways:
                 return
-            await message.add_reaction(emoji="<:anywaysDude:693637780802109500>")
+            await message.add_reaction(emoji=emoji.Anyways)
         # if they sent a question
         elif any([keyword in message_content for keyword in ('?', 'WHAT')]):
             # don't react to it if it was a URL
             if any([keyword in message_content for keyword in ('HTTPS','HTTP')]):
                 return
-            await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
+            await message.add_reaction(emoji=emoji.Shrug)
         # if they said i swear
         elif any([keyword in message_content for keyword in ('SWEAR', 'PROMISE', 'LYING')]):
-            await message.add_reaction(emoji="<:pepeUnsureAbtThatOneChief:680578638499938305>")
+            await message.add_reaction(emoji=emoji.Unsure)
         # if they said thanks or deal
         elif any([keyword in message_content for keyword in ('THANK', 'DEAL')]):
-            await message.add_reaction(emoji="<:pepehandshake:734537325752614933>")
+            await message.add_reaction(emoji=emoji.Handshake)
         # if they said love or miss
         elif any([keyword in message_content for keyword in ('LOVE', 'MISS')]):
-            await message.add_reaction(emoji="<:worrylove:745680240646553682>")
+            await message.add_reaction(emoji=emoji.Love)
         # if they said cya or later or bye
         elif any([keyword in message_content for keyword in ('CYA', 'LATER', 'BYE')]):
-            await message.add_reaction(emoji="<a:pepeWave:618911376613834752>")
+            await message.add_reaction(emoji=emoji.Wave)
         # if they said sorry
         elif 'SORRY' in message_content:
-            await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
+            await message.add_reaction(emoji=emoji.Squint)
 
         else:
             if 5 >= random.randint(1, 100) >= 1:
-                #await message.add_reaction(emoji="<:blabla:745411421243703438>")
-                await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
-                #await message.add_reaction(emoji="<:antSquintStare2:740945924402053131>")
-                #await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
+                await message.add_reaction(emoji=emoji.Shrug)
 
     # need this statement for bot to recognize commands
     await client.process_commands(message)
@@ -110,7 +112,7 @@ if bot_token_path.is_file():
     TOKEN = config.get("BOT1", "token")
 else:
     print(
-        "\n", "Discord bot token not found at: ", bot_token_path, "... Please correct file path in Main.py file.",
+        "\n", "Discord bot token not found at: ", bot_token_path, "... Please correct file path in React.py file.",
     )
     sys.exit()
 
