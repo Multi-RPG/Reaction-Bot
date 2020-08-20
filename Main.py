@@ -36,7 +36,7 @@ async def on_message(message):
         message_content = message.content.upper()
 
         # if they said blabla, shut, or stop
-        if any([keyword in message_content for keyword in ('BLA', 'SHUT', 'STOP')]):
+        if any([keyword in message_content for keyword in ('BLA BLA','BLABLA', 'SHUT', 'STOP')]):
                 await message.add_reaction(emoji="<:blabla:745411421243703438>")
                 await message.add_reaction(emoji="<:worrysquintstare:745481891624255559>")
         # if they said anyways, whatever, or seriously
@@ -47,6 +47,9 @@ async def on_message(message):
             await message.add_reaction(emoji="<:anywaysDude:693637780802109500>")
         # if they sent a question
         elif any([keyword in message_content for keyword in ('?', 'WHAT')]):
+            # don't react to it if it was a URL
+            if any([keyword in message_content for keyword in ('HTTPS','HTTP')]):
+                return
             await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
         # if they said i swear
         elif any([keyword in message_content for keyword in ('SWEAR', 'PROMISE', 'LYING')]):
