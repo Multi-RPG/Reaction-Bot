@@ -41,10 +41,14 @@ async def on_message(message):
         # convert the message into a string uppercase
         message_content = message.content.upper()
 
+        # if they sent a URL or emoji (contains a colon), don't react
+        if any([keyword in message_content for keyword in ('HTTP', '/', ':')]):
+            return
+
         # if they said blabla, shut, or stop
-        if any([keyword in message_content for keyword in ('BLA BLA','BLABLA', 'SHUT', 'STOP')]):
-                await message.add_reaction(emoji=emoji.Blabla)
-                await message.add_reaction(emoji=emoji.Squint)
+        if any([keyword in message_content for keyword in ('BLA BLA', 'BLABLA', 'SHUT', 'STOP')]):
+            await message.add_reaction(emoji=emoji.Blabla)
+            await message.add_reaction(emoji=emoji.Squint)
         # if they said anyways, whatever, or seriously
         elif any([keyword in message_content for keyword in ('ANYWAY', 'WHATEVER', 'SERIOUSLY')]):
             # if they sent the anyways dude emoji, don't double dip
@@ -52,11 +56,10 @@ async def on_message(message):
                 return
             await message.add_reaction(emoji=emoji.Anyways)
         # if they sent a question
-        elif any([keyword in message_content for keyword in ('?', 'WHAT')]):
-            # don't react to it if it was a URL
-            if any([keyword in message_content for keyword in ('HTTPS','HTTP')]):
-                return
-            await message.add_reaction(emoji=emoji.Shrug)
+        elif any([keyword in message_content for keyword in ('?', 'WHAT', 'WHY', 'HUH')]):
+            # this conditional triggers a lot, so lower the odds more with another dice roll
+            if 10 >= random.randint(1, 100) >= 1:
+                await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
         # if they said i swear
         elif any([keyword in message_content for keyword in ('SWEAR', 'PROMISE', 'LYING')]):
             await message.add_reaction(emoji=emoji.Unsure)
@@ -67,14 +70,13 @@ async def on_message(message):
         elif any([keyword in message_content for keyword in ('LOVE', 'MISS')]):
             await message.add_reaction(emoji=emoji.Love)
         # if they said cya or later or bye
-        elif any([keyword in message_content for keyword in ('CYA', 'LATER', 'BYE')]):
+        elif any([keyword in message_content for keyword in ('CYA', 'LATER', 'BYE', 'LAKE')]):
             await message.add_reaction(emoji=emoji.Wave)
         # if they said sorry
         elif 'SORRY' in message_content:
             await message.add_reaction(emoji=emoji.Squint)
-
         else:
-            if 5 >= random.randint(1, 100) >= 1:
+            if 1 >= random.randint(1, 100) >= 1:
                 await message.add_reaction(emoji=emoji.Shrug)
 
     # need this statement for bot to recognize commands
