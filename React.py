@@ -3,6 +3,7 @@ import configparser
 import sys
 import random
 import collections
+import re
 from discord.ext import commands
 from pathlib import Path
 
@@ -27,14 +28,19 @@ async def on_message(message):
     # Emojis used for reaction
     Emoji_Reaction = collections.namedtuple("Emoji_Reaction", ["Blabla", "Squint", "Anyways",
                                                                "Shrug", "Unsure", "Love",
-                                                               "Handshake", "Wave", "Bait"])
+                                                               "Handshake", "Wave", "Bait",
+                                                               "Tired", "Hammer", "Timer",
+                                                               "Think", "Teach"])
 
     # Emojis formatted into discord syntax
     emoji = Emoji_Reaction("<:blabla:745411421243703438>", "<:worrysquintstare:745481891624255559>",
                            "<:anywaysDude:693637780802109500>", "<:worryshrug2:745484088596627518>",
                            "<:pepeUnsureAbtThatOneChief:680578638499938305>",
                            "<:worrylove:745680240646553682>", "<:pepehandshake:734537325752614933>",
-                           "<a:pepeWave:618911376613834752>", "<a:jebaitRod:667530473605562387>")
+                           "<a:lake2:781248856292982825>", "<a:jebaitRod:667530473605562387>",
+                           "<:feelsExhaustedWrinklesMan:667532202644602880>", "<a:pepegeHammer:769370156110708766>",
+                           "<a:pepeJudy:751230976771883058>", "<:pepethink6:782776439745413140>",
+                           "<:pepeTeachChart:782795561987342337>")
 
     # 70% chance to scan a message to react to it
     if 70 >= random.randint(1, 100) >= 1:
@@ -42,46 +48,76 @@ async def on_message(message):
         message_content = message.content.upper()
 
         # if they sent a URL or emoji (contains a colon), don't react
-        if any([keyword in message_content for keyword in ('HTTP', '/', ':')]):
+        if search_for_url(message_content):
+            print("found link")
             return
-
         # if they said blabla, shut, or stop
-        if any([keyword in message_content for keyword in ('BLA BLA', 'BLABLA', 'SHUT', 'STOP')]):
+        if search_for_word("BLABLA", "BLA BLA", "SHUT UP", "STOP", string=message_content):
             await message.add_reaction(emoji=emoji.Blabla)
             await message.add_reaction(emoji=emoji.Squint)
         # if they said anyways, whatever, or seriously
-        elif any([keyword in message_content for keyword in ('ANYWAY', 'WHATEVER', 'SERIOUSLY')]):
+        elif search_for_word("ANYWAY", "ANYWAYS", "WHATEVER", "SERIOUSLY", "SRSLY", string=message_content):
             # if they sent the anyways dude emoji, don't double dip
             if message.content == emoji.Anyways:
                 return
             await message.add_reaction(emoji=emoji.Anyways)
+        # if they said i swear
+        elif search_for_word("SWEAR", "PROMISE", "LYING", string=message_content):
+            await message.add_reaction(emoji=emoji.Unsure)
+        # if they said thanks or deal
+        elif search_for_word("THANK", "THANKS", "DEAL", string=message_content):
+            await message.add_reaction(emoji=emoji.Handshake)
+        # if they said love or miss
+        elif search_for_word("MISS", "LOVE", string=message_content):
+            await message.add_reaction(emoji=emoji.Love)
+        # if they said cya or later or bye
+        elif search_for_word("CYA", "LATER", "BYE", "LAKE", string=message_content):
+            await message.add_reaction(emoji=emoji.Wave)
+        # if they said sorry
+        elif search_for_word("SORRY", "SRY", string=message_content):
+            await message.add_reaction(emoji=emoji.Squint)
+        # if they said tired, exhausted, tedious
+        elif search_for_word("TIRED", "EXHAUSTED", "TEDIOUS", string=message_content):
+            await message.add_reaction(emoji=emoji.Tired)
+        # if they said idiot, mistake, messed
+        elif search_for_word("IDIOT", "MISTAKE", "MESSED", string=message_content):
+            await message.add_reaction(emoji=emoji.Hammer)
+        # if they said wait, hurry, slow, come on
+        elif search_for_word("WAIT", "WAITING", "HURRY", "SLOW", "COME ON", string=message_content):
+            await message.add_reaction(emoji=emoji.Timer)
+        # if they said unsure, thinking, not sure, hmm , or idk
+        elif search_for_word("UNSURE", "THINKING", "NOT SURE", "HMM", "IDK", string=message_content):
+            await message.add_reaction(emoji=emoji.Think)
+        # if they said teach, simple, professor
+        elif search_for_word("TEACH", "SIMPLE", "PROFESSOR", string=message_content):
+            await message.add_reaction(emoji=emoji.Teach)
         # if they sent a question
         elif any([keyword in message_content for keyword in ('?', 'WHAT', 'WHY', 'HUH')]):
             # this conditional triggers a lot, so lower the odds more with another dice roll
-            if 10 >= random.randint(1, 100) >= 1:
-                await message.add_reaction(emoji="<:worryshrug2:745484088596627518>")
-        # if they said i swear
-        elif any([keyword in message_content for keyword in ('SWEAR', 'PROMISE', 'LYING')]):
-            await message.add_reaction(emoji=emoji.Unsure)
-        # if they said thanks or deal
-        elif any([keyword in message_content for keyword in ('THANK', 'DEAL')]):
-            await message.add_reaction(emoji=emoji.Handshake)
-        # if they said love or miss
-        elif any([keyword in message_content for keyword in ('LOVE', 'MISS')]):
-            await message.add_reaction(emoji=emoji.Love)
-        # if they said cya or later or bye
-        elif any([keyword in message_content for keyword in ('CYA', 'LATER', 'BYE', 'LAKE')]):
-            await message.add_reaction(emoji=emoji.Wave)
-        # if they said sorry
-        elif 'SORRY' in message_content:
-            await message.add_reaction(emoji=emoji.Squint)
-        else:
-            if 1 >= random.randint(1, 100) >= 1:
+            if 5 >= random.randint(1, 100) >= 1:
                 await message.add_reaction(emoji=emoji.Shrug)
 
     # need this statement for bot to recognize commands
     await client.process_commands(message)
 
+
+def search_for_word(*args, string):
+    if len(args) == 1:
+        return re.search(fr'\b({args[0]})\b', string)
+    elif len(args) == 2:
+        return re.search(fr'\b({args[0]}|{args[1]})\b', string)
+    elif len(args) == 3:
+        return re.search(fr'\b({args[0]}|{args[1]}|{args[2]})\b', string)
+    elif len(args) == 4:
+        return re.search(fr'\b({args[0]}|{args[1]}|{args[2]}|{args[3]})\b', string)
+    else:
+        return re.search(fr'\b({args[0]}|{args[1]}|{args[2]}|{args[3]}||{args[4]})\b', string)
+
+    return re.search(fr'\b({args[0]}|{args[1]})\b', string)
+
+
+def search_for_url(string):
+    return re.search(r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)', string)
 
 @client.command(
     name="help", description="command information", brief="commands", aliases=["h", "HELP"],
