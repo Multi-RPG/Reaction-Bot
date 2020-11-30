@@ -110,10 +110,8 @@ def search_for_word(*args, string):
         return re.search(fr'\b({args[0]}|{args[1]}|{args[2]})\b', string)
     elif len(args) == 4:
         return re.search(fr'\b({args[0]}|{args[1]}|{args[2]}|{args[3]})\b', string)
-    else:
-        return re.search(fr'\b({args[0]}|{args[1]}|{args[2]}|{args[3]}||{args[4]})\b', string)
-
-    return re.search(fr'\b({args[0]}|{args[1]})\b', string)
+    elif len(args) == 5:
+        return re.search(fr'\b({args[0]}|{args[1]}|{args[2]}|{args[3]}|{args[4]})\b', string)
 
 
 def search_for_url(string):
